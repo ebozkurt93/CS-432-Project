@@ -59,8 +59,25 @@ namespace LabExampleClient
             byte[] IV = new byte[16];
             Array.Copy(hashedPass, 0, key, 0, 16);
             Array.Copy(hashedPass, 16, IV, 0, 16);
-            byte[] decryptedVal = decryptWithAES128(enc_c3_pub_prv, key, IV);
 
+            
+            try
+            {
+                byte[] array = StringToByteArray(enc_c1_pub_prv);
+                byte[] decryptedVal = decryptWithAES128(array, key, IV);
+                if (decryptedVal.Equals(hashedPass))
+                { //continue
+                }
+            }
+            catch (Exception)
+            {
+              textLog.AppendText("There was an error, Please try again.\n");
+            }
+            /*
+            if (decryptedVal.Equals(hashedPass))
+            { textLog.AppendText("yes"); }
+            else textLog.AppendText("no");
+            */
             //textLog.AppendText(pass);
 
             /*
@@ -204,10 +221,10 @@ namespace LabExampleClient
         }
 
         // decryption with AES-128
-        static byte[] decryptWithAES128(string input, byte[] key, byte[] IV)
+        static byte[] decryptWithAES128(byte[] input, byte[] key, byte[] IV)
         {
             // convert input string to byte array
-            byte[] byteInput = Encoding.Default.GetBytes(input);
+           // byte[] byteInput = Encoding.Default.GetBytes(input);
 
             // create AES object from System.Security.Cryptography
             RijndaelManaged aesObject = new RijndaelManaged();
@@ -229,16 +246,25 @@ namespace LabExampleClient
 
             try
             {
-                result = decryptor.TransformFinalBlock(byteInput, 0, byteInput.Length);
+                result = decryptor.TransformFinalBlock(input, 0, input.Length);
             }
             catch (Exception e) // if encryption fails
             {
                 Console.WriteLine(e.Message); // display the cause
+                
             }
 
             return result;
         }
 
+        public static byte[] StringToByteArray(string hex)
+        {
+            int numberChars = hex.Length;
+            byte[] bytes = new byte[numberChars / 2];
+            for (int i = 0; i < numberChars; i += 2)
+                bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
+            return bytes;
+        }
 
 
 
