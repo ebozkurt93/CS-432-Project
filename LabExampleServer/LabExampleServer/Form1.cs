@@ -176,5 +176,10 @@ namespace LabExampleServer
         {
 
         }
+
+        private void clearLogBtn_Click(object sender, EventArgs e)
+        {
+            textLog.Clear();
+        }
     }
 }

@@ -39,6 +39,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.textRemotePort = new System.Windows.Forms.TextBox();
             this.buttonConnect = new System.Windows.Forms.Button();
+            this.clearLogBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // textPort
@@ -137,11 +138,22 @@
             this.buttonConnect.UseVisualStyleBackColor = true;
             this.buttonConnect.Click += new System.EventHandler(this.buttonConnect_Click);
             // 
+            // clearLogBtn
+            // 
+            this.clearLogBtn.Location = new System.Drawing.Point(264, 331);
+            this.clearLogBtn.Name = "clearLogBtn";
+            this.clearLogBtn.Size = new System.Drawing.Size(97, 23);
+            this.clearLogBtn.TabIndex = 11;
+            this.clearLogBtn.Text = "Clear Log";
+            this.clearLogBtn.UseVisualStyleBackColor = true;
+            this.clearLogBtn.Click += new System.EventHandler(this.clearLogBtn_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(443, 364);
+            this.Controls.Add(this.clearLogBtn);
             this.Controls.Add(this.buttonConnect);
             this.Controls.Add(this.textRemotePort);
             this.Controls.Add(this.label5);
@@ -173,6 +185,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox textRemotePort;
         private System.Windows.Forms.Button buttonConnect;
+        private System.Windows.Forms.Button clearLogBtn;
     }
 }
 
