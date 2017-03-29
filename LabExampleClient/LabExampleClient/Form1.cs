@@ -60,6 +60,12 @@ namespace LabExampleClient
             Array.Copy(hashedPass, 0, key, 0, 16);
             Array.Copy(hashedPass, 16, IV, 0, 16);
 
+            //int num = Int32.Parse(usernameTextBox.Text.Substring(usernameTextBox.Text.IndexOf("c") + "c".Length));
+            String num = usernameTextBox.Text.Substring(usernameTextBox.Text.IndexOf("c") + "c".Length);
+            //textLog.AppendText(num.ToString());
+            //String pub_prv = (String) this.GetType().GetField("enc_c" + num + "_pub_prv").GetValue(this);
+            String pub_prv = ("enc_c" + num + "_pub_prv");
+            textLog.AppendText(pub_prv);
             
             try
             {
