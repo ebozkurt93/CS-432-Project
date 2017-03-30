@@ -27,7 +27,7 @@ namespace LabExampleServer
         Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         Socket remoteSocket;
         List<Socket> socketList = new List<Socket>();
-        List<String> usernameList = new List<String>();
+        //List<String> usernameList = new List<String>();
 
         public Form1()
         {

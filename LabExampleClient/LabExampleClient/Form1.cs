@@ -64,7 +64,7 @@ namespace LabExampleClient
             String num = usernameTextBox.Text.Substring(usernameTextBox.Text.IndexOf("c") + "c".Length);
             //textLog.AppendText(num.ToString());
             //String pub_prv = (String) this.GetType().GetField("enc_c" + num + "_pub_prv").GetValue(this);
-            // String pub_prv = ("enc_c" + num + "_pub_prv");
+            // String pub_prv = ("enc_c" + num + "_pub_prv"); //add something here
             String pub_prv = enc_c1_pub_prv;
             //textLog.AppendText(pub_prv);
 
@@ -142,6 +142,7 @@ namespace LabExampleClient
                     String incomingMessage = Encoding.Default.GetString(buffer);
                     incomingMessage = incomingMessage.Substring(0, incomingMessage.IndexOf('\0'));
                     textLog.AppendText(incomingMessage + "\n");
+                    //take the incoming message [128 bit random number] 
                 }
                 catch
                 {
