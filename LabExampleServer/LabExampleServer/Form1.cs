@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,6 +16,10 @@ namespace LabExampleServer
 {
     public partial class Form1 : Form
     {
+
+        private RNGCryptoServiceProvider rngCsp = new RNGCryptoServiceProvider();
+
+
         bool terminating = false;
         bool listening = false;
         bool remoteConnected = false;
@@ -22,6 +27,7 @@ namespace LabExampleServer
         Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         Socket remoteSocket;
         List<Socket> socketList = new List<Socket>();
+        List<String> usernameList = new List<String>();
 
         public Form1()
         {
@@ -92,6 +98,21 @@ namespace LabExampleServer
                     incomingMessage = incomingMessage.Substring(0, incomingMessage.IndexOf('\0'));
                     textLog.AppendText(incomingMessage + "\n");
 
+                    //sending random number
+                    // Create a byte array to hold the random value. (32B -> 256-bit in this example)
+                    byte[] randomNumber = new byte[16];
+
+                    // Fill the array with a random value.
+                    rngCsp.GetBytes(randomNumber);
+
+                    // Display the resulting random number as a hexadecimal string.
+                    string hexResult = (generateHexStringFromByteArray(randomNumber));
+                    //send hexResult to client
+                    buffer = Encoding.Default.GetBytes(hexResult);
+                    s.Send(buffer);
+
+
+                    /*
                     if (remoteConnected)
                     {
                         try
@@ -117,7 +138,7 @@ namespace LabExampleServer
                     {
                         buttonConnect.Enabled = true;
                         textLog.AppendText("Not connected to remote server.\n");
-                    }
+                    } */
                 }
                 catch
                 {
@@ -180,6 +201,12 @@ namespace LabExampleServer
         private void clearLogBtn_Click(object sender, EventArgs e)
         {
             textLog.Clear();
+        }
+
+        private string generateHexStringFromByteArray(byte[] input)
+        {
+            string hexString = BitConverter.ToString(input);
+            return hexString.Replace("-", "");
         }
     }
 }

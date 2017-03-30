@@ -42,7 +42,7 @@ namespace LabExampleClient
         bool connected = false;
 
         Socket clientSocket;
-        
+
         public Form1()
         {
             Control.CheckForIllegalCrossThreadCalls = false;
@@ -64,20 +64,61 @@ namespace LabExampleClient
             String num = usernameTextBox.Text.Substring(usernameTextBox.Text.IndexOf("c") + "c".Length);
             //textLog.AppendText(num.ToString());
             //String pub_prv = (String) this.GetType().GetField("enc_c" + num + "_pub_prv").GetValue(this);
-            String pub_prv = ("enc_c" + num + "_pub_prv");
-            textLog.AppendText(pub_prv);
-            
+            // String pub_prv = ("enc_c" + num + "_pub_prv");
+            String pub_prv = enc_c1_pub_prv;
+            //textLog.AppendText(pub_prv);
+
             try
             {
-                byte[] array = StringToByteArray(enc_c1_pub_prv);
+                byte[] array = StringToByteArray(pub_prv);
                 byte[] decryptedVal = decryptWithAES128(array, key, IV);
-                if (decryptedVal.Equals(hashedPass))
+                if (decryptedVal != null)
                 { //continue
+
+
+                    clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                    String IP = textIP.Text;
+                    int port;
+
+                    if (Int32.TryParse(textPort.Text, out port))
+                    {
+                        try
+                        {
+                            clientSocket.Connect(IP, port);
+                            connected = true;
+                            buttonConnect.Enabled = false;
+                            Thread receiveThread;
+                            receiveThread = new Thread(new ThreadStart(Receive));
+                            receiveThread.Start();
+                            textLog.AppendText("Connected to server.\n");
+
+                            //send username to server
+                            String message = usernameTextBox.Text;
+
+                            if (message != "" && message.Length < 63)
+                            {
+                                Byte[] buffer = new Byte[64];
+                                buffer = Encoding.Default.GetBytes(message);
+                                clientSocket.Send(buffer);
+                            }
+
+                        }
+                        catch
+                        {
+                            textLog.AppendText("Could not connect.\n");
+                        }
+                    }
+                    else
+                    {
+                        textLog.AppendText("Check port.");
+                    }
+
+
                 }
             }
             catch (Exception)
             {
-              textLog.AppendText("There was an error, Please try again.\n");
+                textLog.AppendText("There was an error, Please try again.\n");
             }
             /*
             if (decryptedVal.Equals(hashedPass))
@@ -86,33 +127,7 @@ namespace LabExampleClient
             */
             //textLog.AppendText(pass);
 
-            /*
-            clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            String IP = textIP.Text;
-            int port;
 
-            if (Int32.TryParse(textPort.Text, out port))
-            {
-                try
-                {
-                    clientSocket.Connect(IP, port);
-                    connected = true;
-                    buttonConnect.Enabled = false;
-                    Thread receiveThread;
-                    receiveThread = new Thread(new ThreadStart(Receive));
-                    receiveThread.Start();
-                    textLog.AppendText("Connected to server.\n");
-                }
-                catch
-                {
-                    textLog.AppendText("Could not connect.\n");
-                }
-            }
-            else
-            {
-                textLog.AppendText("Check port.");
-            }
-            */
         }
 
         private void Receive()
@@ -165,7 +180,15 @@ namespace LabExampleClient
             {
                 connected = false;
                 terminating = true;
-                Environment.Exit(0);
+                try
+                {
+                    Environment.Exit(0);
+                }
+                catch (Exception)
+                {
+
+                    // throw;
+                }
             }
         }
 
@@ -179,7 +202,7 @@ namespace LabExampleClient
 
         }
 
-     
+
         private void disconnectBtn_Click(object sender, EventArgs e)
         {
             //clientSocket.Close();
@@ -230,7 +253,7 @@ namespace LabExampleClient
         static byte[] decryptWithAES128(byte[] input, byte[] key, byte[] IV)
         {
             // convert input string to byte array
-           // byte[] byteInput = Encoding.Default.GetBytes(input);
+            // byte[] byteInput = Encoding.Default.GetBytes(input);
 
             // create AES object from System.Security.Cryptography
             RijndaelManaged aesObject = new RijndaelManaged();
@@ -257,7 +280,7 @@ namespace LabExampleClient
             catch (Exception e) // if encryption fails
             {
                 Console.WriteLine(e.Message); // display the cause
-                
+
             }
 
             return result;
